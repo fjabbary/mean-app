@@ -9,6 +9,7 @@ import { PostsService } from '../posts.service';
   styleUrls: ['./create-post.component.css']
 })
 export class CreatePostComponent {
+  postReqMessage = '';
 
   constructor(private postService: PostsService) { }
 
@@ -19,7 +20,9 @@ export class CreatePostComponent {
 
     const post: Post = form.value;
 
-    this.postService.addPost(post);
+    this.postService.addPost(post).subscribe(data => {
+      this.postReqMessage = data.message;
+    })
     form.resetForm();
   }
 }

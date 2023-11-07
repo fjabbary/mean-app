@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Post } from '../post.model';
-import { Observable, of } from 'rxjs'
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json'
+  })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -8,18 +16,19 @@ import { Observable, of } from 'rxjs'
 export class PostsService {
   private posts: Post[] = [];
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  getPosts(): Observable<Post[]> {
-    return of(this.posts)
+  getPosts() {
+    return this.http.get<{ message: string, data: Post[] }>('http://localhost:8000/api/posts')
   }
 
   addPost(post: Post) {
     const newPost: Post = {
+      id: 'asdas',
       title: post.title,
       content: post.content
     }
 
-    this.posts.push(newPost);
+    return this.http.post<{ message: string }>('http://localhost:8000/api/posts', newPost, httpOptions)
   }
 }
